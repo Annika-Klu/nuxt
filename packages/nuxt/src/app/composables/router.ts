@@ -10,6 +10,8 @@ import { createError } from './error'
 import { useState } from './state'
 import { setResponseStatus } from './ssr'
 
+import localePath from "../../../../../src/composables/useLocalePath.js"
+
 import type { PageMeta } from '#app'
 
 export const useRouter = () => {
@@ -89,6 +91,7 @@ export const navigateTo = (to: RouteLocationRaw | undefined | null, options?: Na
     to = '/'
   }
 
+  if (!options?.external) to = typeof to === "string" ? localePath(to) :localePath(to.path)
   const toPath = typeof to === 'string' ? to : ((to as RouteLocationPathRaw).path || '/')
   const isExternal = hasProtocol(toPath, { acceptRelative: true })
   if (isExternal && !options?.external) {
